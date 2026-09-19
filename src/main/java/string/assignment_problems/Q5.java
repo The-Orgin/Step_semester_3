@@ -1,32 +1,56 @@
 import java.util.Scanner;
 
 public class Q5 {
+    static class Player implements Comparable<Player> {
+        String name;
+        int matchesPlayed;
+        double battingAverage;
+        boolean injured;
+        public Player(String name, int matchesPlayed, double battingAverage, boolean injured) {
+            this.name = name;
+            this.matchesPlayed = matchesPlayed;
+            this.battingAverage = battingAverage;
+            this.injured = injured;
+        }
+        public int compareTo(Player other) {
+            if (this.battingAverage < other.battingAverage) return 1;
+            if (this.battingAverage > other.battingAverage) return -1;
+            return 0;
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
-        }
+        if (!scanner.hasNextInt()) return;
         int n = scanner.nextInt();
-        int[] nums = new int[n];
+        Player[] players = new Player[n];
         for (int i = 0; i < n; i++) {
-            nums[i] = scanner.nextInt();
+            players[i] = new Player(scanner.next(), scanner.nextInt(), scanner.nextDouble(), scanner.nextBoolean());
         }
-        System.out.println(findMin(nums));
+        System.out.println(draftAndRank(players));
         scanner.close();
     }
-
-    public static int findMin(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (nums[mid] > nums[right]) {
-                left = mid + 1;
-            } else {
-                right = mid;
+    static boolean isDraftable(int matchesPlayed) {
+        return matchesPlayed >= 10;
+    }
+    static boolean isDraftable(int matchesPlayed, boolean injured) {
+        return matchesPlayed >= 5 && !injured;
+    }
+    static String draftAndRank(Player[] players) {
+        java.util.List<Player> draftable = new java.util.ArrayList<>();
+        for (int i = 0; i < players.length; i++) {
+            Player p = players[i];
+            if (isDraftable(p.matchesPlayed) || isDraftable(p.matchesPlayed, p.injured)) {
+                draftable.add(p);
             }
         }
-        return nums[left];
+        Player[] arr = new Player[draftable.size()];
+        for (int i = 0; i < arr.length; i++) arr[i] = draftable.get(i);
+        java.util.Arrays.sort(arr);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(i + 1).append(". ").append(arr[i].name);
+            if (i < arr.length - 1) sb.append(" | ");
+        }
+        return sb.toString();
     }
 }

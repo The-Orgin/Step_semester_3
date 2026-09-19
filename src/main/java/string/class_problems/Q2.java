@@ -3,33 +3,21 @@ import java.util.Scanner;
 public class Q2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
-        }
+        if (!scanner.hasNextInt()) return;
         int n = scanner.nextInt();
-        int[] prices = new int[n];
-        for (int i = 0; i < n; i++) {
-            prices[i] = scanner.nextInt();
-        }
-        System.out.println(maxProfit(prices));
+        String[] teamNames = new String[n];
+        for (int i = 0; i < n; i++) teamNames[i] = scanner.next();
+        System.out.println(findDuplicateTeam(teamNames));
         scanner.close();
     }
-
-    public static int maxProfit(int[] prices) {
-        if (prices == null || prices.length == 0) return 0;
-        int minPrice = prices[0];
-        int maxProf = 0;
-        for (int i = 1; i < prices.length; i++) {
-            if (prices[i] < minPrice) {
-                minPrice = prices[i];
-            } else {
-                int profit = prices[i] - minPrice;
-                if (profit > maxProf) {
-                    maxProf = profit;
+    static String findDuplicateTeam(String[] teamNames) {
+        for (int i = 0; i < teamNames.length; i++) {
+            for (int j = i + 1; j < teamNames.length; j++) {
+                if (teamNames[i].equals(teamNames[j])) {
+                    return "Duplicate Found: " + teamNames[i];
                 }
             }
         }
-        return maxProf;
+        return "No Duplicates Found";
     }
 }

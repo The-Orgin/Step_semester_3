@@ -3,48 +3,40 @@ import java.util.Scanner;
 public class Q4 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
-        }
-        int n1 = scanner.nextInt();
-        int[] arr1 = new int[n1];
-        for (int i = 0; i < n1; i++) {
-            arr1[i] = scanner.nextInt();
-        }
-        int n2 = scanner.nextInt();
-        int[] arr2 = new int[n2];
-        for (int i = 0; i < n2; i++) {
-            arr2[i] = scanner.nextInt();
-        }
-        int[] merged = mergeSortedArrays(arr1, arr2);
-        System.out.print("[");
-        for (int i = 0; i < merged.length; i++) {
-            System.out.print(merged[i]);
-            if (i < merged.length - 1) {
-                System.out.print(", ");
+        if (!scanner.hasNextInt()) return;
+        int rows = scanner.nextInt();
+        int[][] grid = new int[rows][];
+        for (int i = 0; i < rows; i++) {
+            int cols = scanner.nextInt();
+            grid[i] = new int[cols];
+            for (int j = 0; j < cols; j++) {
+                grid[i][j] = scanner.nextInt();
             }
         }
-        System.out.println("]");
+        int threshold = scanner.nextInt();
+        System.out.println(classifyRows(grid, threshold));
         scanner.close();
     }
-
-    public static int[] mergeSortedArrays(int[] arr1, int[] arr2) {
-        int[] result = new int[arr1.length + arr2.length];
-        int p1 = 0, p2 = 0, p3 = 0;
-        while (p1 < arr1.length && p2 < arr2.length) {
-            if (arr1[p1] <= arr2[p2]) {
-                result[p3++] = arr1[p1++];
+    static double rowAverage(int[] row) {
+        if (row.length == 0) return 0.0;
+        double sum = 0;
+        for (int i = 0; i < row.length; i++) sum += row[i];
+        return sum / row.length;
+    }
+    static String classifyRows(int[][] seatingScores, int threshold) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < seatingScores.length; i++) {
+            double avg = rowAverage(seatingScores[i]);
+            sb.append("Row ").append(i).append(": ");
+            if (avg >= threshold) {
+                sb.append("Buzzing Zone");
             } else {
-                result[p3++] = arr2[p2++];
+                sb.append("Quiet Zone");
+            }
+            if (i < seatingScores.length - 1) {
+                sb.append(" | ");
             }
         }
-        while (p1 < arr1.length) {
-            result[p3++] = arr1[p1++];
-        }
-        while (p2 < arr2.length) {
-            result[p3++] = arr2[p2++];
-        }
-        return result;
+        return sb.toString();
     }
 }

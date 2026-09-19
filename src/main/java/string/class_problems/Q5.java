@@ -1,40 +1,56 @@
 import java.util.Scanner;
 
 public class Q5 {
+    static class Candidate implements Comparable<Candidate> {
+        String name;
+        double cgpa;
+        int codingScore;
+        double compositeScore;
+        public Candidate(String name, double cgpa, int codingScore) {
+            this.name = name;
+            this.cgpa = cgpa;
+            this.codingScore = codingScore;
+            this.compositeScore = cgpa * 10.0 + codingScore * 0.5;
+        }
+        public int compareTo(Candidate other) {
+            if (this.compositeScore < other.compositeScore) return 1;
+            if (this.compositeScore > other.compositeScore) return -1;
+            return 0;
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
-        }
+        if (!scanner.hasNextInt()) return;
         int n = scanner.nextInt();
-        int[] nums = new int[n];
+        Candidate[] candidates = new Candidate[n];
         for (int i = 0; i < n; i++) {
-            nums[i] = scanner.nextInt();
+            candidates[i] = new Candidate(scanner.next(), scanner.nextDouble(), scanner.nextInt());
         }
-        int k = scanner.nextInt();
-        int[] rotated = rotateArray(nums, k);
-        System.out.print("[");
-        for (int i = 0; i < rotated.length; i++) {
-            System.out.print(rotated[i]);
-            if (i < rotated.length - 1) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println("]");
+        System.out.println(shortlistAndRank(candidates));
         scanner.close();
     }
-
-    public static int[] rotateArray(int[] nums, int k) {
-        if (nums.length == 0) return nums;
-        k = k % nums.length;
-        int[] newArray = new int[nums.length];
-        for (int i = 0; i < nums.length; i++) {
-            newArray[(i + k) % nums.length] = nums[i];
+    static boolean isEligible(double cgpa) {
+        return cgpa >= 7.5;
+    }
+    static boolean isEligible(double cgpa, int codingScore) {
+        return cgpa >= 6.5 && codingScore >= 60;
+    }
+    static String shortlistAndRank(Candidate[] candidates) {
+        java.util.List<Candidate> eligible = new java.util.ArrayList<>();
+        for (int i = 0; i < candidates.length; i++) {
+            Candidate c = candidates[i];
+            if (isEligible(c.cgpa) || isEligible(c.cgpa, c.codingScore)) {
+                eligible.add(c);
+            }
         }
-        for (int i = 0; i < nums.length; i++) {
-            nums[i] = newArray[i];
+        Candidate[] arr = new Candidate[eligible.size()];
+        for (int i = 0; i < arr.length; i++) arr[i] = eligible.get(i);
+        java.util.Arrays.sort(arr);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(i + 1).append(". ").append(arr[i].name).append(" (").append(arr[i].compositeScore).append(")");
+            if (i < arr.length - 1) sb.append(" | ");
         }
-        return nums;
+        return sb.toString();
     }
 }

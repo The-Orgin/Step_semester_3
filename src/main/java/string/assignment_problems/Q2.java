@@ -3,32 +3,21 @@ import java.util.Scanner;
 public class Q2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
-        }
+        if (!scanner.hasNextInt()) return;
         int n = scanner.nextInt();
-        int[] nums = new int[n];
-        for (int i = 0; i < n; i++) {
-            nums[i] = scanner.nextInt();
-        }
-        System.out.println(maxSubArray(nums));
+        String[] names = new String[n];
+        for (int i = 0; i < n; i++) names[i] = scanner.next();
+        System.out.println(findDuplicatePick(names));
         scanner.close();
     }
-
-    public static int maxSubArray(int[] nums) {
-        int maxSum = nums[0];
-        int currentSum = nums[0];
-        for (int i = 1; i < nums.length; i++) {
-            if (currentSum < 0) {
-                currentSum = nums[i];
-            } else {
-                currentSum += nums[i];
-            }
-            if (currentSum > maxSum) {
-                maxSum = currentSum;
+    static String findDuplicatePick(String[] playerNames) {
+        for (int i = 0; i < playerNames.length; i++) {
+            for (int j = i + 1; j < playerNames.length; j++) {
+                if (playerNames[i].equals(playerNames[j])) {
+                    return "Duplicate Found: " + playerNames[i];
+                }
             }
         }
-        return maxSum;
+        return "No Duplicates Found";
     }
 }

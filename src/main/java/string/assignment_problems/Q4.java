@@ -3,32 +3,40 @@ import java.util.Scanner;
 public class Q4 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
-            scanner.close();
-            return;
+        if (!scanner.hasNextInt()) return;
+        int rows = scanner.nextInt();
+        int[][] grid = new int[rows][];
+        for (int i = 0; i < rows; i++) {
+            int cols = scanner.nextInt();
+            grid[i] = new int[cols];
+            for (int j = 0; j < cols; j++) {
+                grid[i][j] = scanner.nextInt();
+            }
         }
-        int n = scanner.nextInt();
-        int[] nums = new int[n];
-        for (int i = 0; i < n; i++) {
-            nums[i] = scanner.nextInt();
-        }
-        int k = scanner.nextInt();
-        System.out.println(subarraySum(nums, k));
+        int threshold = scanner.nextInt();
+        System.out.println(classifyMatches(grid, threshold));
         scanner.close();
     }
-
-    public static int subarraySum(int[] nums, int k) {
-        int count = 0;
-        int currentSum = 0;
-        java.util.HashMap<Integer, Integer> prefixSumFreq = new java.util.HashMap<>();
-        prefixSumFreq.put(0, 1);
-        for (int i = 0; i < nums.length; i++) {
-            currentSum += nums[i];
-            if (prefixSumFreq.containsKey(currentSum - k)) {
-                count += prefixSumFreq.get(currentSum - k);
+    static double rowAverage(int[] row) {
+        if (row.length == 0) return 0.0;
+        double sum = 0;
+        for (int i = 0; i < row.length; i++) sum += row[i];
+        return sum / row.length;
+    }
+    static String classifyMatches(int[][] runsPerOver, int threshold) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < runsPerOver.length; i++) {
+            double avg = rowAverage(runsPerOver[i]);
+            sb.append("Match ").append(i).append(": ");
+            if (avg >= threshold) {
+                sb.append("Power Surge");
+            } else {
+                sb.append("Normal");
             }
-            prefixSumFreq.put(currentSum, prefixSumFreq.getOrDefault(currentSum, 0) + 1);
+            if (i < runsPerOver.length - 1) {
+                sb.append(" | ");
+            }
         }
-        return count;
+        return sb.toString();
     }
 }
