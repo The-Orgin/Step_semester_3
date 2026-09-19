@@ -1,42 +1,23 @@
 import java.util.Scanner;
 
 public class Q4 {
+    static class HallTicket {
+        String studentName;
+        int seatNumber;
+        public HallTicket(String studentName, int seatNumber) {
+            this.studentName = studentName;
+            this.seatNumber = seatNumber;
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) return;
-        int rows = scanner.nextInt();
-        int[][] grid = new int[rows][];
-        for (int i = 0; i < rows; i++) {
-            int cols = scanner.nextInt();
-            grid[i] = new int[cols];
-            for (int j = 0; j < cols; j++) {
-                grid[i][j] = scanner.nextInt();
-            }
-        }
-        int threshold = scanner.nextInt();
-        System.out.println(classifyMatches(grid, threshold));
+        HallTicket priya = new HallTicket("Priya", 0);
+        HallTicket copy = priya;
+        copy.seatNumber = 45;
+        System.out.println("Priya's seatNumber (via first variable): " + priya.seatNumber);
+        System.out.println("copy == priya: " + (copy == priya));
+        HallTicket separate = new HallTicket("Priya", 45);
+        System.out.println("separate == priya: " + (separate == priya));
         scanner.close();
-    }
-    static double rowAverage(int[] row) {
-        if (row.length == 0) return 0.0;
-        double sum = 0;
-        for (int i = 0; i < row.length; i++) sum += row[i];
-        return sum / row.length;
-    }
-    static String classifyMatches(int[][] runsPerOver, int threshold) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < runsPerOver.length; i++) {
-            double avg = rowAverage(runsPerOver[i]);
-            sb.append("Match ").append(i).append(": ");
-            if (avg >= threshold) {
-                sb.append("Power Surge");
-            } else {
-                sb.append("Normal");
-            }
-            if (i < runsPerOver.length - 1) {
-                sb.append(" | ");
-            }
-        }
-        return sb.toString();
     }
 }

@@ -1,23 +1,46 @@
 import java.util.Scanner;
 
 public class Q2 {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) return;
-        int n = scanner.nextInt();
-        String[] teamNames = new String[n];
-        for (int i = 0; i < n; i++) teamNames[i] = scanner.next();
-        System.out.println(findDuplicateTeam(teamNames));
-        scanner.close();
-    }
-    static String findDuplicateTeam(String[] teamNames) {
-        for (int i = 0; i < teamNames.length; i++) {
-            for (int j = i + 1; j < teamNames.length; j++) {
-                if (teamNames[i].equals(teamNames[j])) {
-                    return "Duplicate Found: " + teamNames[i];
-                }
+    static class MessWallet {
+        private double balance;
+        public MessWallet(double openingBalance) {
+            if (openingBalance < 0) {
+                this.balance = 0;
+                System.out.println("Warning: Opening balance cannot be negative. Set to 0.");
+            } else {
+                this.balance = openingBalance;
             }
         }
-        return "No Duplicates Found";
+        public void topUp(double amount) {
+            if (amount <= 0) {
+                System.out.println("Top-up amount must be positive.");
+            } else {
+                this.balance += amount;
+                System.out.println("Balance after top-up: " + this.balance);
+            }
+        }
+        public void deduct(double amount) {
+            if (amount > this.balance) {
+                System.out.println("Deduct rejected: insufficient balance");
+            } else {
+                this.balance -= amount;
+            }
+        }
+        public double getBalance() {
+            return this.balance;
+        }
+    }
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.hasNextDouble()) {
+            double opening = scanner.nextDouble();
+            MessWallet wallet = new MessWallet(opening);
+            double topUpAmount = scanner.nextDouble();
+            wallet.topUp(topUpAmount);
+            double deductAmount = scanner.nextDouble();
+            wallet.deduct(deductAmount);
+            System.out.println("Final balance: " + wallet.getBalance());
+        }
+        scanner.close();
     }
 }

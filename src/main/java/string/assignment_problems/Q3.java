@@ -1,24 +1,31 @@
 import java.util.Scanner;
 
 public class Q3 {
+    static class Employee {
+        String empId;
+        String empName;
+        double salary;
+        boolean isIntern;
+        public Employee(String empId, String empName, double salary) {
+            this.empId = empId;
+            this.empName = empName;
+            this.salary = salary;
+            this.isIntern = false;
+        }
+        public Employee(String empId, String empName) {
+            this(empId, empName, 0.0);
+            this.isIntern = true;
+        }
+        public void printProfile() {
+            System.out.println(empId + " | " + empName + " | Rs " + salary + " | Intern: " + isIntern);
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) return;
-        int n = scanner.nextInt();
-        int[] scores = new int[n];
-        for (int i = 0; i < n; i++) scores[i] = scanner.nextInt();
-        System.out.println(findMinMaxSpread(scores));
+        Employee perm = new Employee("E-101", "Divya", 65000);
+        Employee intern = new Employee("E-102", "Arjun");
+        perm.printProfile();
+        intern.printProfile();
         scanner.close();
-    }
-    static String findMinMaxSpread(int[] scores) {
-        if (scores.length == 0) return "";
-        int min = scores[0];
-        int max = scores[0];
-        for (int i = 1; i < scores.length; i++) {
-            if (scores[i] < min) min = scores[i];
-            if (scores[i] > max) max = scores[i];
-        }
-        int spread = max - min;
-        return "Min: " + min + " | Max: " + max + " | Spread: " + spread;
     }
 }

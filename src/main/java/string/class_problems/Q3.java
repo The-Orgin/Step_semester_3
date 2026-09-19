@@ -1,32 +1,30 @@
 import java.util.Scanner;
 
 public class Q3 {
+    static class Course {
+        String code;
+        String title;
+        int credits;
+        int labCredits;
+        public Course(String code, String title, int credits, int labCredits) {
+            this.code = code;
+            this.title = title;
+            this.credits = credits;
+            this.labCredits = labCredits;
+        }
+        public Course(String code, String title, int credits) {
+            this(code, title, credits, 0);
+        }
+        public int totalCredits() {
+            return this.credits + this.labCredits;
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) return;
-        int n = scanner.nextInt();
-        int[] scores = new int[n];
-        for (int i = 0; i < n; i++) scores[i] = scanner.nextInt();
-        System.out.println(java.util.Arrays.toString(findTopThreeScores(scores)));
+        Course c1 = new Course("21CSC201J", "Data Structures", 4);
+        Course c2 = new Course("21CSC205L", "DSA Lab", 3, 1);
+        System.out.println(c1.code + " total credits: " + c1.totalCredits());
+        System.out.println(c2.code + " total credits: " + c2.totalCredits());
         scanner.close();
-    }
-    static int[] findTopThreeScores(int[] scores) {
-        int first = Integer.MIN_VALUE;
-        int second = Integer.MIN_VALUE;
-        int third = Integer.MIN_VALUE;
-        for (int i = 0; i < scores.length; i++) {
-            int s = scores[i];
-            if (s > first) {
-                third = second;
-                second = first;
-                first = s;
-            } else if (s > second) {
-                third = second;
-                second = s;
-            } else if (s > third) {
-                third = s;
-            }
-        }
-        return new int[]{first, second, third};
     }
 }
