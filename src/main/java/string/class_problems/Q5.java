@@ -3,45 +3,38 @@ import java.util.Scanner;
 public class Q5 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextLine()) {
+        if (!scanner.hasNextInt()) {
             scanner.close();
             return;
         }
-        String raw = scanner.nextLine();
-        String normalized = normalizeReference(raw);
-        String result = validateAndFormat(normalized);
-        System.out.println(result);
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        int k = scanner.nextInt();
+        int[] rotated = rotateArray(nums, k);
+        System.out.print("[");
+        for (int i = 0; i < rotated.length; i++) {
+            System.out.print(rotated[i]);
+            if (i < rotated.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
         scanner.close();
     }
 
-    public static String normalizeReference(String raw) {
-        String trimmed = raw.trim();
-        if (trimmed.length() >= 3) {
-            return trimmed.substring(0, 3).toUpperCase() + trimmed.substring(3);
+    public static int[] rotateArray(int[] nums, int k) {
+        if (nums.length == 0) return nums;
+        k = k % nums.length;
+        int[] newArray = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            newArray[(i + k) % nums.length] = nums[i];
         }
-        return trimmed.toUpperCase();
-    }
-
-    public static String validateAndFormat(String reference) {
-        if (reference.length() != 14) {
-            return "Invalid: wrong length";
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = newArray[i];
         }
-        for (int i = 0; i < 3; i++) {
-            if (!Character.isLetter(reference.charAt(i))) {
-                return "Invalid: bank code must be 3 letters";
-            }
-        }
-        for (int i = 3; i < 14; i++) {
-            if (!Character.isDigit(reference.charAt(i))) {
-                return "Invalid: non-digit body";
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("[").append(reference.substring(0, 3)).append("] ");
-        sb.append("DATE: ").append(reference.substring(3, 5)).append("/")
-          .append(reference.substring(5, 7)).append("/")
-          .append(reference.substring(7, 9)).append(" | ");
-        sb.append("SEQ: ").append(reference.substring(9));
-        return sb.toString();
+        return nums;
     }
 }

@@ -3,24 +3,27 @@ import java.util.Scanner;
 public class Q3 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextLine()) {
+        if (!scanner.hasNextInt()) {
             scanner.close();
             return;
         }
-        String filename = scanner.nextLine();
-        System.out.println(validateFileExtension(filename));
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        System.out.println(containsDuplicate(nums));
         scanner.close();
     }
 
-    public static String validateFileExtension(String filename) {
-        int lastDotIndex = filename.lastIndexOf('.');
-        if (lastDotIndex == -1 || lastDotIndex == filename.length() - 1) {
-            return "Rejected — invalid file type";
+    public static boolean containsDuplicate(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] == nums[j]) {
+                    return true;
+                }
+            }
         }
-        String extension = filename.substring(lastDotIndex + 1);
-        if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("zip")) {
-            return "Accepted";
-        }
-        return "Rejected — invalid file type";
+        return false;
     }
 }
