@@ -7,26 +7,23 @@ public class Q4 {
             scanner.close();
             return;
         }
-        String text = scanner.nextLine();
-        char result = findFirstNonRepeatingChar(text);
-        if (result == '\0') {
-            System.out.println("No Non-Repeating Character Found");
-        } else {
-            System.out.println("First Non-Repeating Character: '" + result + "'");
-        }
+        String phone = scanner.nextLine();
+        System.out.println(maskPhoneNumber(phone));
         scanner.close();
     }
-    public static char findFirstNonRepeatingChar(String text) {
-        int[] frequencies = new int[256];
-        for (int i = 0; i < text.length(); i++) {
-            frequencies[text.charAt(i)]++;
+
+    public static String maskPhoneNumber(String phone) {
+        if (phone.length() != 10) {
+            return "Invalid phone number";
         }
-        for (int i = 0; i < text.length(); i++) {
-            if (frequencies[text.charAt(i)] == 1) {
-                return text.charAt(i);
+        for (int i = 0; i < phone.length(); i++) {
+            if (!Character.isDigit(phone.charAt(i))) {
+                return "Invalid phone number";
             }
         }
-        return '\0';
+        StringBuilder sb = new StringBuilder("XXXXXX");
+        sb.append(phone.substring(6));
+        sb.insert(6, "-");
+        return sb.toString();
     }
 }
-

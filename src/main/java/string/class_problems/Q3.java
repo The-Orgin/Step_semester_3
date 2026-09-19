@@ -3,38 +3,24 @@ import java.util.Scanner;
 public class Q3 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (!scanner.hasNextInt()) {
+        if (!scanner.hasNextLine()) {
             scanner.close();
             return;
         }
-        int n = scanner.nextInt();
-        double[] heights = new double[n];
-        double[] weights = new double[n];
-        for (int i = 0; i < n; i++) {
-            heights[i] = scanner.nextDouble();
-            weights[i] = scanner.nextDouble();
-        }
-        printWellnessReport(heights, weights);
+        String filename = scanner.nextLine();
+        System.out.println(validateFileExtension(filename));
         scanner.close();
     }
-    public static String getBmiStatus(double bmi) {
-        if (bmi < 18.5) {
-            return "Underweight";
+
+    public static String validateFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex == -1 || lastDotIndex == filename.length() - 1) {
+            return "Rejected — invalid file type";
         }
-        if (bmi >= 18.5 && bmi <= 24.9) {
-            return "Normal";
+        String extension = filename.substring(lastDotIndex + 1);
+        if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("zip")) {
+            return "Accepted";
         }
-        if (bmi >= 25.0 && bmi <= 29.9) {
-            return "Overweight";
-        }
-        return "Obese";
-    }
-    public static void printWellnessReport(double[] heights, double[] weights) {
-        for (int i = 0; i < heights.length; i++) {
-            double bmi = weights[i] / (heights[i] * heights[i]);
-            String status = getBmiStatus(bmi);
-            System.out.printf("Person %d - Height: %.2f m, Weight: %.2f kg | BMI: %.2f | Status: %s\n", (i + 1), heights[i], weights[i], bmi, status);
-        }
+        return "Rejected — invalid file type";
     }
 }
-
