@@ -1,23 +1,40 @@
 import java.util.Scanner;
 
 public class Q4 {
-    static class HallTicket {
-        String studentName;
-        int seatNumber;
-        public HallTicket(String studentName, int seatNumber) {
-            this.studentName = studentName;
-            this.seatNumber = seatNumber;
+    static class TrafficLight {
+        private String color;
+        private final String id;
+
+        public TrafficLight(String id) {
+            this.id = id;
+            this.color = "RED";
+        }
+
+        public void next() {
+            if (this.color.equals("RED")) {
+                this.color = "GREEN";
+            } else if (this.color.equals("GREEN")) {
+                this.color = "YELLOW";
+            } else if (this.color.equals("YELLOW")) {
+                this.color = "RED";
+            }
+        }
+
+        public String getColor() {
+            return this.color;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        HallTicket priya = new HallTicket("Priya", 0);
-        HallTicket copy = priya;
-        copy.seatNumber = 45;
-        System.out.println("Priya's seatNumber (via first variable): " + priya.seatNumber);
-        System.out.println("copy == priya: " + (copy == priya));
-        HallTicket separate = new HallTicket("Priya", 45);
-        System.out.println("separate == priya: " + (separate == priya));
+        if (!scanner.hasNext()) {
+            scanner.close();
+            return;
+        }
+        TrafficLight t = new TrafficLight(scanner.next());
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) t.next();
+        System.out.println(t.getColor());
         scanner.close();
     }
 }

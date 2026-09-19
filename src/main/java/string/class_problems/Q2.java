@@ -1,46 +1,45 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static class MessWallet {
-        private double balance;
-        public MessWallet(double openingBalance) {
-            if (openingBalance < 0) {
-                this.balance = 0;
-                System.out.println("Warning: Opening balance cannot be negative. Set to 0.");
-            } else {
-                this.balance = openingBalance;
+    static class Scorecard {
+        private boolean[] results;
+        private int count;
+
+        public Scorecard(int maxQuestions) {
+            this.results = new boolean[maxQuestions];
+            this.count = 0;
+        }
+
+        public void recordAnswer(boolean isCorrect) {
+            if (this.count < this.results.length) {
+                this.results[this.count] = isCorrect;
+                this.count++;
             }
         }
-        public void topUp(double amount) {
-            if (amount <= 0) {
-                System.out.println("Top-up amount must be positive.");
-            } else {
-                this.balance += amount;
-                System.out.println("Balance after top-up: " + this.balance);
+
+        public int getScore() {
+            int score = 0;
+            for (int i = 0; i < this.count; i++) {
+                if (this.results[i]) {
+                    score++;
+                }
             }
-        }
-        public void deduct(double amount) {
-            if (amount > this.balance) {
-                System.out.println("Deduct rejected: insufficient balance");
-            } else {
-                this.balance -= amount;
-            }
-        }
-        public double getBalance() {
-            return this.balance;
+            return score;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (scanner.hasNextDouble()) {
-            double opening = scanner.nextDouble();
-            MessWallet wallet = new MessWallet(opening);
-            double topUpAmount = scanner.nextDouble();
-            wallet.topUp(topUpAmount);
-            double deductAmount = scanner.nextDouble();
-            wallet.deduct(deductAmount);
-            System.out.println("Final balance: " + wallet.getBalance());
+        if (!scanner.hasNextInt()) {
+            scanner.close();
+            return;
         }
+        Scorecard sc = new Scorecard(scanner.nextInt());
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            sc.recordAnswer(scanner.nextBoolean());
+        }
+        System.out.println(sc.getScore());
         scanner.close();
     }
 }

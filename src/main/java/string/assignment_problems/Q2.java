@@ -1,49 +1,48 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static class PayrollAccount {
-        private double basicSalary;
-        private double bonus;
-        public PayrollAccount(double basicSalary) {
-            if (basicSalary < 0) {
-                this.basicSalary = 0;
-                System.out.println("Warning: Basic salary cannot be negative. Set to 0.");
-            } else {
-                this.basicSalary = basicSalary;
-            }
-            this.bonus = 0;
+    static class Playlist {
+        private String[] songs;
+        private int count;
+
+        public Playlist(int maxSize) {
+            this.songs = new String[maxSize];
+            this.count = 0;
         }
-        public void creditBonus(double amount) {
-            if (amount <= 0) {
-                System.out.println("Bonus amount must be positive.");
-            } else {
-                this.bonus += amount;
-                System.out.println("Bonus credited: Rs " + amount);
+
+        public void addSong(String song) {
+            if (this.count < this.songs.length) {
+                this.songs[this.count] = song;
+                this.count++;
             }
         }
-        public void deductTax(double percent) {
-            if (percent < 0 || percent > 100) {
-                System.out.println("Tax percentage must be between 0 and 100.");
-            } else {
-                this.basicSalary -= this.basicSalary * (percent / 100.0);
-                System.out.println("Tax deducted: " + percent + "%");
+
+        public String[] getSongs() {
+            String[] copy = new String[this.count];
+            for (int i = 0; i < this.count; i++) {
+                copy[i] = this.songs[i];
             }
+            return copy;
         }
-        public double getNetSalary() {
-            return this.basicSalary + this.bonus;
+
+        public int getSongCount() {
+            return this.count;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        if (scanner.hasNextDouble()) {
-            double salary = scanner.nextDouble();
-            PayrollAccount acc = new PayrollAccount(salary);
-            double bonus = scanner.nextDouble();
-            acc.creditBonus(bonus);
-            double tax = scanner.nextDouble();
-            acc.deductTax(tax);
-            System.out.println("Net salary: Rs " + acc.getNetSalary());
+        if (!scanner.hasNextInt()) {
+            scanner.close();
+            return;
         }
+        Playlist p = new Playlist(scanner.nextInt());
+        int n = scanner.nextInt();
+        scanner.nextLine();
+        for (int i = 0; i < n; i++) {
+            p.addSong(scanner.nextLine());
+        }
+        System.out.println(p.getSongCount());
         scanner.close();
     }
 }

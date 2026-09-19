@@ -1,27 +1,50 @@
 import java.util.Scanner;
 
 public class Q5 {
-    static class Employee {
-        String empName;
-        double salary;
-        static String companyName = "Bright Horizon Technologies";
-        static int employeeCount = 0;
-        public Employee(String empName, double salary) {
-            this.empName = empName;
-            this.salary = salary;
-            employeeCount++;
+    static class Cart {
+        private double[] prices;
+        private int count;
+        private final String cartId;
+
+        public Cart(String cartId, int maxSize) {
+            this.cartId = cartId;
+            this.prices = new double[maxSize];
+            this.count = 0;
         }
-        public static void printCompanyInfo() {
-            System.out.println(companyName);
-            System.out.println("Employees on record: " + employeeCount);
+
+        public void addItem(double price) {
+            if (this.count < this.prices.length) {
+                this.prices[this.count] = price;
+                this.count++;
+            }
+        }
+
+        public double getTotal() {
+            double sum = 0;
+            for (int i = 0; i < this.count; i++) {
+                sum += this.prices[i];
+            }
+            return sum;
+        }
+
+        public int getItemCount() {
+            return this.count;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Employee e1 = new Employee("A", 100);
-        Employee e2 = new Employee("B", 200);
-        Employee e3 = new Employee("C", 300);
-        Employee.printCompanyInfo();
+        if (!scanner.hasNext()) {
+            scanner.close();
+            return;
+        }
+        Cart cart = new Cart(scanner.next(), scanner.nextInt());
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            cart.addItem(scanner.nextDouble());
+        }
+        System.out.println(cart.getTotal());
+        System.out.println(cart.getItemCount());
         scanner.close();
     }
 }

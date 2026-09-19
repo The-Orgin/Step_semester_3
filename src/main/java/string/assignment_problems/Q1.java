@@ -1,38 +1,53 @@
 import java.util.Scanner;
 
 public class Q1 {
-    static class BookInventory {
-        String title;
-        String author;
-        int copiesAvailable;
-        public BookInventory(String title, String author, int copiesAvailable) {
-            this.title = title;
-            this.author = author;
-            this.copiesAvailable = copiesAvailable;
+    static class Character {
+        private int health;
+        private final int maxHealth;
+
+        public Character(int maxHealth) {
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
         }
-        public void printEntry() {
-            System.out.println(title + " by " + author + " - " + copiesAvailable + " copies available");
+
+        public void takeDamage(int amount) {
+            if (amount > 0) {
+                this.health -= amount;
+                if (this.health < 0) {
+                    this.health = 0;
+                }
+            }
+        }
+
+        public void heal(int amount) {
+            if (amount > 0) {
+                this.health += amount;
+                if (this.health > this.maxHealth) {
+                    this.health = this.maxHealth;
+                }
+            }
+        }
+
+        public int getHealth() {
+            return this.health;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        BookInventory[] books = new BookInventory[4];
-        if (scanner.hasNextLine()) {
-            for (int i = 0; i < 4; i++) {
-                String title = scanner.nextLine();
-                String author = scanner.nextLine();
-                int copies = Integer.parseInt(scanner.nextLine());
-                books[i] = new BookInventory(title, author, copies);
-            }
-        } else {
-            books[0] = new BookInventory("Clean Code", "Robert C. Martin", 3);
-            books[1] = new BookInventory("Effective Java", "Joshua Bloch", 5);
-            books[2] = new BookInventory("Refactoring", "Martin Fowler", 0);
-            books[3] = new BookInventory("Design Patterns", "GoF", 2);
+        if (!scanner.hasNextInt()) {
+            scanner.close();
+            return;
         }
-        for (int i = 0; i < books.length; i++) {
-            books[i].printEntry();
+        Character c = new Character(scanner.nextInt());
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            String op = scanner.next();
+            int amt = scanner.nextInt();
+            if (op.equals("damage")) c.takeDamage(amt);
+            else if (op.equals("heal")) c.heal(amt);
         }
+        System.out.println(c.getHealth());
         scanner.close();
     }
 }

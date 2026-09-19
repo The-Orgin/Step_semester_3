@@ -1,30 +1,32 @@
 import java.util.Scanner;
 
 public class Q3 {
-    static class Course {
-        String code;
-        String title;
-        int credits;
-        int labCredits;
-        public Course(String code, String title, int credits, int labCredits) {
-            this.code = code;
-            this.title = title;
-            this.credits = credits;
-            this.labCredits = labCredits;
+    static class NameTag {
+        private final String nickname;
+
+        public NameTag(String fullName) {
+            String[] parts = fullName.split(" ");
+            if (parts.length >= 2) {
+                this.nickname = parts[0] + " " + parts[1].charAt(0) + ".";
+            } else {
+                this.nickname = fullName;
+            }
         }
-        public Course(String code, String title, int credits) {
-            this(code, title, credits, 0);
-        }
-        public int totalCredits() {
-            return this.credits + this.labCredits;
+
+        public String getNickname() {
+            return this.nickname;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Course c1 = new Course("21CSC201J", "Data Structures", 4);
-        Course c2 = new Course("21CSC205L", "DSA Lab", 3, 1);
-        System.out.println(c1.code + " total credits: " + c1.totalCredits());
-        System.out.println(c2.code + " total credits: " + c2.totalCredits());
+        if (!scanner.hasNextLine()) {
+            scanner.close();
+            return;
+        }
+        String fullName = scanner.nextLine();
+        NameTag tag = new NameTag(fullName);
+        System.out.println(tag.getNickname());
         scanner.close();
     }
 }

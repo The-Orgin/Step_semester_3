@@ -1,37 +1,47 @@
 import java.util.Scanner;
 
 public class Q1 {
-    static class PlacementRecord {
-        String studentName;
-        String company;
-        double packageLpa;
-        public PlacementRecord(String studentName, String company, double packageLpa) {
-            this.studentName = studentName;
-            this.company = company;
-            this.packageLpa = packageLpa;
+    static class PiggyBank {
+        private double savings;
+        private final String id;
+
+        public PiggyBank(String id) {
+            this.id = id;
+            this.savings = 0;
         }
-        public void printRecord() {
-            System.out.println(studentName + " -> " + company + " @ " + packageLpa + " LPA");
+
+        public void deposit(double amount) {
+            if (amount > 0) {
+                this.savings += amount;
+            }
+        }
+
+        public void withdraw(double amount) {
+            if (amount > 0 && amount <= this.savings) {
+                this.savings -= amount;
+            }
+        }
+
+        public double getSavings() {
+            return this.savings;
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        PlacementRecord[] records = new PlacementRecord[3];
-        if (scanner.hasNextLine()) {
-            for (int i = 0; i < 3; i++) {
-                String name = scanner.nextLine();
-                String company = scanner.nextLine();
-                double lpa = Double.parseDouble(scanner.nextLine());
-                records[i] = new PlacementRecord(name, company, lpa);
-            }
-        } else {
-            records[0] = new PlacementRecord("Ravi", "TCS", 4.5);
-            records[1] = new PlacementRecord("Anitha", "Zoho", 6.2);
-            records[2] = new PlacementRecord("Karthik", "Infosys", 4.0);
+        if (!scanner.hasNext()) {
+            scanner.close();
+            return;
         }
-        for (int i = 0; i < records.length; i++) {
-            records[i].printRecord();
+        PiggyBank pb = new PiggyBank(scanner.next());
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            String op = scanner.next();
+            double amt = scanner.nextDouble();
+            if (op.equals("deposit")) pb.deposit(amt);
+            else if (op.equals("withdraw")) pb.withdraw(amt);
         }
+        System.out.println(pb.getSavings());
         scanner.close();
     }
 }
