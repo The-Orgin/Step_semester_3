@@ -1,31 +1,22 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static class Scorecard {
-        private boolean[] results;
-        private int count;
-
-        public Scorecard(int maxQuestions) {
-            this.results = new boolean[maxQuestions];
-            this.count = 0;
-        }
-
-        public void recordAnswer(boolean isCorrect) {
-            if (this.count < this.results.length) {
-                this.results[this.count] = isCorrect;
-                this.count++;
-            }
-        }
-
-        public int getScore() {
-            int score = 0;
-            for (int i = 0; i < this.count; i++) {
-                if (this.results[i]) {
-                    score++;
-                }
-            }
-            return score;
-        }
+    static abstract class Item {
+        String title;
+        Item(String title) { this.title = title; }
+        abstract int getDays();
+    }
+    static class Book extends Item {
+        Book(String title) { super(title); }
+        int getDays() { return 14; }
+    }
+    static class DVD extends Item {
+        DVD(String title) { super(title); }
+        int getDays() { return 7; }
+    }
+    static class Magazine extends Item {
+        Magazine(String title) { super(title); }
+        int getDays() { return 3; }
     }
 
     public static void main(String[] args) {
@@ -34,12 +25,23 @@ public class Q2 {
             scanner.close();
             return;
         }
-        Scorecard sc = new Scorecard(scanner.nextInt());
         int n = scanner.nextInt();
+        scanner.nextLine();
+        Item[] items = new Item[n];
         for (int i = 0; i < n; i++) {
-            sc.recordAnswer(scanner.nextBoolean());
+            String line = scanner.nextLine().trim();
+            int spaceIdx = line.indexOf(" ");
+            String type = line.substring(0, spaceIdx);
+            String title = line.substring(spaceIdx + 1).replace("\"", "");
+            if (type.equals("BOOK")) items[i] = new Book(title);
+            else if (type.equals("DVD")) items[i] = new DVD(title);
+            else items[i] = new Magazine(title);
         }
-        System.out.println(sc.getScore());
+        java.time.LocalDate current = java.time.LocalDate.of(2023, 10, 26);
+        for (int i = 0; i < n; i++) {
+            java.time.LocalDate due = current.plusDays(items[i].getDays());
+            System.out.println(items[i].title + ": " + due);
+        }
         scanner.close();
     }
 }

@@ -1,34 +1,30 @@
 import java.util.Scanner;
 
 public class Q5 {
-    static class AttendanceSheet {
-        private String[] presentStudents;
-        private int count;
-
-        public AttendanceSheet(int maxSize) {
-            this.presentStudents = new String[maxSize];
-            this.count = 0;
+    static abstract class Transport {
+        double distance;
+        Transport(double d) { this.distance = d; }
+        abstract double getFare();
+        abstract String getType();
+    }
+    static class Bus extends Transport {
+        Bus(double d) { super(d); }
+        double getFare() {
+            double f = 2.0 + 0.10 * distance;
+            return f > 10.0 ? 10.0 : f;
         }
-
-        public void markPresent(String name) {
-            if (this.count < this.presentStudents.length && !isPresent(name)) {
-                this.presentStudents[this.count] = name;
-                this.count++;
-            }
-        }
-
-        public int getPresentCount() {
-            return this.count;
-        }
-
-        public boolean isPresent(String name) {
-            for (int i = 0; i < this.count; i++) {
-                if (this.presentStudents[i].equals(name)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        String getType() { return "BUS"; }
+    }
+    static class Train extends Transport {
+        Train(double d) { super(d); }
+        double getFare() { return 3.0 + 0.15 * distance; }
+        String getType() { return "TRAIN"; }
+    }
+    static class Metro extends Transport {
+        double peak;
+        Metro(double d, double p) { super(d); this.peak = p; }
+        double getFare() { return (1.50 + 0.20 * distance) * peak; }
+        String getType() { return "METRO"; }
     }
 
     public static void main(String[] args) {
@@ -37,12 +33,22 @@ public class Q5 {
             scanner.close();
             return;
         }
-        AttendanceSheet sheet = new AttendanceSheet(scanner.nextInt());
         int n = scanner.nextInt();
+        Transport[] transports = new Transport[n];
         for (int i = 0; i < n; i++) {
-            sheet.markPresent(scanner.next());
+            String type = scanner.next();
+            double d = scanner.nextDouble();
+            if (type.equals("BUS")) transports[i] = new Bus(d);
+            else if (type.equals("TRAIN")) transports[i] = new Train(d);
+            else transports[i] = new Metro(d, scanner.nextDouble());
         }
-        System.out.println(sheet.getPresentCount());
+        double total = 0;
+        for (int i = 0; i < n; i++) {
+            double f = transports[i].getFare();
+            System.out.printf("%s: %.2f\n", transports[i].getType(), f);
+            total += f;
+        }
+        System.out.printf("Total: %.2f\n", total);
         scanner.close();
     }
 }

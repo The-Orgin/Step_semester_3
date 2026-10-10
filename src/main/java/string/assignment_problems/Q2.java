@@ -1,33 +1,29 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static class Playlist {
-        private String[] songs;
-        private int count;
-
-        public Playlist(int maxSize) {
-            this.songs = new String[maxSize];
-            this.count = 0;
+    static abstract class Vehicle {
+        int hours;
+        Vehicle(int h) { hours = h; }
+        abstract double getCharge();
+        abstract String getType();
+    }
+    static class Bike extends Vehicle {
+        Bike(int h) { super(h); }
+        double getCharge() { return 10.0 * hours; }
+        String getType() { return "BIKE"; }
+    }
+    static class Car extends Vehicle {
+        Car(int h) { super(h); }
+        double getCharge() { return 30.0 + (hours > 1 ? (hours - 1) * 20.0 : 0); }
+        String getType() { return "CAR"; }
+    }
+    static class Truck extends Vehicle {
+        Truck(int h) { super(h); }
+        double getCharge() {
+            double c = 50.0 * hours;
+            return c < 100.0 ? 100.0 : c;
         }
-
-        public void addSong(String song) {
-            if (this.count < this.songs.length) {
-                this.songs[this.count] = song;
-                this.count++;
-            }
-        }
-
-        public String[] getSongs() {
-            String[] copy = new String[this.count];
-            for (int i = 0; i < this.count; i++) {
-                copy[i] = this.songs[i];
-            }
-            return copy;
-        }
-
-        public int getSongCount() {
-            return this.count;
-        }
+        String getType() { return "TRUCK"; }
     }
 
     public static void main(String[] args) {
@@ -36,13 +32,22 @@ public class Q2 {
             scanner.close();
             return;
         }
-        Playlist p = new Playlist(scanner.nextInt());
         int n = scanner.nextInt();
-        scanner.nextLine();
+        Vehicle[] vehicles = new Vehicle[n];
         for (int i = 0; i < n; i++) {
-            p.addSong(scanner.nextLine());
+            String type = scanner.next();
+            int h = scanner.nextInt();
+            if (type.equals("BIKE")) vehicles[i] = new Bike(h);
+            else if (type.equals("CAR")) vehicles[i] = new Car(h);
+            else vehicles[i] = new Truck(h);
         }
-        System.out.println(p.getSongCount());
+        double total = 0;
+        for (int i = 0; i < n; i++) {
+            double c = vehicles[i].getCharge();
+            System.out.printf("%s: %.2f\n", vehicles[i].getType(), c);
+            total += c;
+        }
+        System.out.printf("Total: %.2f\n", total);
         scanner.close();
     }
 }
