@@ -1,27 +1,29 @@
 import java.util.Scanner;
 
 public class Q1 {
-    static abstract class Payment {
-        double amount;
-        Payment(double amount) { this.amount = amount; }
-        abstract double getFee();
+    static abstract class Plot {
+        String owner;
+        Plot(String o) { owner = o; }
+        abstract double getArea();
         abstract String getType();
-        double getAdjusted() { return amount + getFee(); }
     }
-    static class Card extends Payment {
-        Card(double amount) { super(amount); }
-        double getFee() { return amount * 0.02; }
-        String getType() { return "CARD"; }
+    static class Circle extends Plot {
+        double radius;
+        Circle(String o, double r) { super(o); radius = r; }
+        double getArea() { return Math.PI * radius * radius; }
+        String getType() { return "CIRCLE"; }
     }
-    static class Wallet extends Payment {
-        Wallet(double amount) { super(amount); }
-        double getFee() { return amount * 0.01; }
-        String getType() { return "WALLET"; }
+    static class Rectangle extends Plot {
+        double length, width;
+        Rectangle(String o, double l, double w) { super(o); length = l; width = w; }
+        double getArea() { return length * width; }
+        String getType() { return "RECTANGLE"; }
     }
-    static class BankTransfer extends Payment {
-        BankTransfer(double amount) { super(amount); }
-        double getFee() { return 0.0; }
-        String getType() { return "BANKTRANSFER"; }
+    static class Triangle extends Plot {
+        double base, height;
+        Triangle(String o, double b, double h) { super(o); base = b; height = h; }
+        double getArea() { return 0.5 * base * height; }
+        String getType() { return "TRIANGLE"; }
     }
 
     public static void main(String[] args) {
@@ -31,21 +33,21 @@ public class Q1 {
             return;
         }
         int n = scanner.nextInt();
-        Payment[] payments = new Payment[n];
+        Plot[] plots = new Plot[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
-            double amt = scanner.nextDouble();
-            if (type.equals("CARD")) payments[i] = new Card(amt);
-            else if (type.equals("WALLET")) payments[i] = new Wallet(amt);
-            else payments[i] = new BankTransfer(amt);
+            String owner = scanner.next();
+            if (type.equals("CIRCLE")) plots[i] = new Circle(owner, scanner.nextDouble());
+            else if (type.equals("RECTANGLE")) plots[i] = new Rectangle(owner, scanner.nextDouble(), scanner.nextDouble());
+            else plots[i] = new Triangle(owner, scanner.nextDouble(), scanner.nextDouble());
         }
         double total = 0;
         for (int i = 0; i < n; i++) {
-            double adj = payments[i].getAdjusted();
-            System.out.printf("%s: %.2f\n", payments[i].getType(), adj);
-            total += adj;
+            double a = plots[i].getArea();
+            System.out.printf("%s (%s): %.2f\n", plots[i].owner, plots[i].getType(), a);
+            total += a;
         }
-        System.out.printf("Total: %.2f\n", total);
+        System.out.printf("Total Area: %.2f\n", total);
         scanner.close();
     }
 }

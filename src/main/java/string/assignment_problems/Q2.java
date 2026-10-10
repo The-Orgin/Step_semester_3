@@ -1,29 +1,30 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static abstract class Vehicle {
-        int hours;
-        Vehicle(int h) { hours = h; }
+    static abstract class Parcel {
+        double weight, value;
+        Parcel(double w, double v) { weight = w; value = v; }
         abstract double getCharge();
+        abstract double getInsurance();
         abstract String getType();
     }
-    static class Bike extends Vehicle {
-        Bike(int h) { super(h); }
-        double getCharge() { return 10.0 * hours; }
-        String getType() { return "BIKE"; }
+    static class Standard extends Parcel {
+        Standard(double w, double v) { super(w, v); }
+        double getCharge() { return 40.0 + 10.0 * weight; }
+        double getInsurance() { return 0.0; }
+        String getType() { return "STANDARD"; }
     }
-    static class Car extends Vehicle {
-        Car(int h) { super(h); }
-        double getCharge() { return 30.0 + (hours > 1 ? (hours - 1) * 20.0 : 0); }
-        String getType() { return "CAR"; }
+    static class Express extends Parcel {
+        Express(double w, double v) { super(w, v); }
+        double getCharge() { return 80.0 + 15.0 * weight; }
+        double getInsurance() { return value * 0.02; }
+        String getType() { return "EXPRESS"; }
     }
-    static class Truck extends Vehicle {
-        Truck(int h) { super(h); }
-        double getCharge() {
-            double c = 50.0 * hours;
-            return c < 100.0 ? 100.0 : c;
-        }
-        String getType() { return "TRUCK"; }
+    static class Fragile extends Parcel {
+        Fragile(double w, double v) { super(w, v); }
+        double getCharge() { return 40.0 + 10.0 * weight + 50.0; }
+        double getInsurance() { return value * 0.02; }
+        String getType() { return "FRAGILE"; }
     }
 
     public static void main(String[] args) {
@@ -33,21 +34,24 @@ public class Q2 {
             return;
         }
         int n = scanner.nextInt();
-        Vehicle[] vehicles = new Vehicle[n];
+        Parcel[] parcels = new Parcel[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
-            int h = scanner.nextInt();
-            if (type.equals("BIKE")) vehicles[i] = new Bike(h);
-            else if (type.equals("CAR")) vehicles[i] = new Car(h);
-            else vehicles[i] = new Truck(h);
+            double w = scanner.nextDouble();
+            double v = scanner.nextDouble();
+            if (type.equals("STANDARD")) parcels[i] = new Standard(w, v);
+            else if (type.equals("EXPRESS")) parcels[i] = new Express(w, v);
+            else parcels[i] = new Fragile(w, v);
         }
-        double total = 0;
+        double grandTotal = 0;
         for (int i = 0; i < n; i++) {
-            double c = vehicles[i].getCharge();
-            System.out.printf("%s: %.2f\n", vehicles[i].getType(), c);
-            total += c;
+            double c = parcels[i].getCharge();
+            double ins = parcels[i].getInsurance();
+            double t = c + ins;
+            System.out.printf("%s: Charge=%.2f Insurance=%.2f Total=%.2f\n", parcels[i].getType(), c, ins, t);
+            grandTotal += t;
         }
-        System.out.printf("Total: %.2f\n", total);
+        System.out.printf("Grand Total: %.2f\n", grandTotal);
         scanner.close();
     }
 }

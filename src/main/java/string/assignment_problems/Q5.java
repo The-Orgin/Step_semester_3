@@ -1,26 +1,43 @@
 import java.util.Scanner;
 
 public class Q5 {
-    static abstract class Subscriber {
-        String name;
-        String startDate;
-        Subscriber(String n, String s) { name = n; startDate = s; }
-        abstract int getValidity();
-        String getRenewalDate() {
-            return java.time.LocalDate.parse(startDate).plusDays(getValidity()).toString();
+    static abstract class Appliance {
+        double hours;
+        boolean saver;
+        Appliance(double h, boolean s) { hours = h; saver = s; }
+        abstract double getPower();
+        abstract boolean supportsSaver();
+        abstract String getType();
+        double getUnits() {
+            if (saver && !supportsSaver()) return -1;
+            double u = (getPower() * hours) / 1000.0;
+            if (saver) u *= 0.75;
+            return u;
         }
     }
-    static class Basic extends Subscriber {
-        Basic(String n, String s) { super(n, s); }
-        int getValidity() { return 30; }
+    static class Fridge extends Appliance {
+        Fridge(double h, boolean s) { super(h, s); }
+        double getPower() { return 150.0; }
+        boolean supportsSaver() { return false; }
+        String getType() { return "FRIDGE"; }
     }
-    static class Standard extends Subscriber {
-        Standard(String n, String s) { super(n, s); }
-        int getValidity() { return 90; }
+    static class AC extends Appliance {
+        AC(double h, boolean s) { super(h, s); }
+        double getPower() { return 1500.0; }
+        boolean supportsSaver() { return true; }
+        String getType() { return "AC"; }
     }
-    static class Premium extends Subscriber {
-        Premium(String n, String s) { super(n, s); }
-        int getValidity() { return 365; }
+    static class TV extends Appliance {
+        TV(double h, boolean s) { super(h, s); }
+        double getPower() { return 100.0; }
+        boolean supportsSaver() { return false; }
+        String getType() { return "TV"; }
+    }
+    static class Washer extends Appliance {
+        Washer(double h, boolean s) { super(h, s); }
+        double getPower() { return 500.0; }
+        boolean supportsSaver() { return true; }
+        String getType() { return "WASHER"; }
     }
 
     public static void main(String[] args) {
@@ -30,18 +47,31 @@ public class Q5 {
             return;
         }
         int n = scanner.nextInt();
-        Subscriber[] subs = new Subscriber[n];
+        scanner.nextLine();
+        Appliance[] apps = new Appliance[n];
         for (int i = 0; i < n; i++) {
-            String type = scanner.next();
-            String name = scanner.next();
-            String sdate = scanner.next();
-            if (type.equals("BASIC")) subs[i] = new Basic(name, sdate);
-            else if (type.equals("STANDARD")) subs[i] = new Standard(name, sdate);
-            else subs[i] = new Premium(name, sdate);
+            String line = scanner.nextLine().trim();
+            String[] parts = line.split(" ");
+            String type = parts[0];
+            double h = Double.parseDouble(parts[1]);
+            boolean s = parts.length > 2 && parts[2].equals("SAVER");
+            if (type.equals("FRIDGE")) apps[i] = new Fridge(h, s);
+            else if (type.equals("AC")) apps[i] = new AC(h, s);
+            else if (type.equals("TV")) apps[i] = new TV(h, s);
+            else apps[i] = new Washer(h, s);
         }
+        double total = 0;
         for (int i = 0; i < n; i++) {
-            System.out.println(subs[i].name + ": " + subs[i].getRenewalDate());
+            double u = apps[i].getUnits();
+            if (u < 0) {
+                System.out.printf("%s: saver mode not supported\n", apps[i].getType());
+            } else {
+                double cost = u * 8.0;
+                System.out.printf("%s: Units=%.2f Cost=%.2f\n", apps[i].getType(), u, cost);
+                total += cost;
+            }
         }
+        System.out.printf("Total Cost: %.2f\n", total);
         scanner.close();
     }
 }

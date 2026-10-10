@@ -1,26 +1,27 @@
 import java.util.Scanner;
 
 public class Q1 {
-    static abstract class Customer {
-        double amount;
-        Customer(double a) { amount = a; }
-        abstract double getFinal();
+    static abstract class Ticket {
+        int count;
+        Ticket(int count) { this.count = count; }
+        abstract double getPrice();
         abstract String getType();
+        double getTotal() { return (getPrice() + 20.0) * count; }
     }
-    static class Student extends Customer {
-        Student(double a) { super(a); }
-        double getFinal() { return amount * 0.90; }
-        String getType() { return "STUDENT"; }
+    static class Regular extends Ticket {
+        Regular(int c) { super(c); }
+        double getPrice() { return 150.0; }
+        String getType() { return "REGULAR"; }
     }
-    static class Staff extends Customer {
-        Staff(double a) { super(a); }
-        double getFinal() { return amount * 0.95; }
-        String getType() { return "STAFF"; }
+    static class Premium extends Ticket {
+        Premium(int c) { super(c); }
+        double getPrice() { return 250.0; }
+        String getType() { return "PREMIUM"; }
     }
-    static class Guest extends Customer {
-        Guest(double a) { super(a); }
-        double getFinal() { return amount + 10.0; }
-        String getType() { return "GUEST"; }
+    static class Recliner extends Ticket {
+        Recliner(int c) { super(c); }
+        double getPrice() { return 400.0; }
+        String getType() { return "RECLINER"; }
     }
 
     public static void main(String[] args) {
@@ -30,19 +31,19 @@ public class Q1 {
             return;
         }
         int n = scanner.nextInt();
-        Customer[] customers = new Customer[n];
+        Ticket[] tickets = new Ticket[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
-            double a = scanner.nextDouble();
-            if (type.equals("STUDENT")) customers[i] = new Student(a);
-            else if (type.equals("STAFF")) customers[i] = new Staff(a);
-            else customers[i] = new Guest(a);
+            int count = scanner.nextInt();
+            if (type.equals("REGULAR")) tickets[i] = new Regular(count);
+            else if (type.equals("PREMIUM")) tickets[i] = new Premium(count);
+            else tickets[i] = new Recliner(count);
         }
         double total = 0;
         for (int i = 0; i < n; i++) {
-            double f = customers[i].getFinal();
-            System.out.printf("%s: %.2f\n", customers[i].getType(), f);
-            total += f;
+            double amt = tickets[i].getTotal();
+            System.out.printf("%s: %.2f\n", tickets[i].getType(), amt);
+            total += amt;
         }
         System.out.printf("Total: %.2f\n", total);
         scanner.close();

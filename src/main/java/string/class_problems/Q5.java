@@ -1,30 +1,27 @@
 import java.util.Scanner;
 
 public class Q5 {
-    static abstract class Transport {
+    static abstract class Booking {
         double distance;
-        Transport(double d) { this.distance = d; }
-        abstract double getFare();
+        Booking(double d) { distance = d; }
+        abstract double getBaseFare();
         abstract String getType();
+        double getTotal() { return getBaseFare() + 50.0; }
     }
-    static class Bus extends Transport {
+    static class Bus extends Booking {
         Bus(double d) { super(d); }
-        double getFare() {
-            double f = 2.0 + 0.10 * distance;
-            return f > 10.0 ? 10.0 : f;
-        }
+        double getBaseFare() { return distance * 2.0; }
         String getType() { return "BUS"; }
     }
-    static class Train extends Transport {
+    static class Train extends Booking {
         Train(double d) { super(d); }
-        double getFare() { return 3.0 + 0.15 * distance; }
+        double getBaseFare() { return distance * 1.5; }
         String getType() { return "TRAIN"; }
     }
-    static class Metro extends Transport {
-        double peak;
-        Metro(double d, double p) { super(d); this.peak = p; }
-        double getFare() { return (1.50 + 0.20 * distance) * peak; }
-        String getType() { return "METRO"; }
+    static class Flight extends Booking {
+        Flight(double d) { super(d); }
+        double getBaseFare() { return 2500.0 + (distance * 4.0); }
+        String getType() { return "FLIGHT"; }
     }
 
     public static void main(String[] args) {
@@ -34,21 +31,17 @@ public class Q5 {
             return;
         }
         int n = scanner.nextInt();
-        Transport[] transports = new Transport[n];
+        Booking[] bookings = new Booking[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
             double d = scanner.nextDouble();
-            if (type.equals("BUS")) transports[i] = new Bus(d);
-            else if (type.equals("TRAIN")) transports[i] = new Train(d);
-            else transports[i] = new Metro(d, scanner.nextDouble());
+            if (type.equals("BUS")) bookings[i] = new Bus(d);
+            else if (type.equals("TRAIN")) bookings[i] = new Train(d);
+            else bookings[i] = new Flight(d);
         }
-        double total = 0;
         for (int i = 0; i < n; i++) {
-            double f = transports[i].getFare();
-            System.out.printf("%s: %.2f\n", transports[i].getType(), f);
-            total += f;
+            System.out.printf("%s: %.2f\n", bookings[i].getType(), bookings[i].getTotal());
         }
-        System.out.printf("Total: %.2f\n", total);
         scanner.close();
     }
 }

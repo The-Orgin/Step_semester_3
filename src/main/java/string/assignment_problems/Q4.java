@@ -1,23 +1,38 @@
 import java.util.Scanner;
 
 public class Q4 {
-    static abstract class Employee {
-        String name;
-        double salary;
-        Employee(String n, double s) { name = n; salary = s; }
-        abstract double getBonus();
+    static abstract class Cab {
+        double km;
+        String time;
+        Cab(double k, String t) { km = k; time = t; }
+        abstract double getRate();
+        abstract boolean supportsNight();
+        abstract String getType();
+        double getFare() {
+            if (time.equals("NIGHT") && !supportsNight()) return -1;
+            double base = km * getRate();
+            if (base < 100.0) base = 100.0;
+            if (time.equals("NIGHT")) base *= 1.20;
+            return base;
+        }
     }
-    static class FullTime extends Employee {
-        FullTime(String n, double s) { super(n, s); }
-        double getBonus() { return salary * 0.10; }
+    static class Mini extends Cab {
+        Mini(double k, String t) { super(k, t); }
+        double getRate() { return 10.0; }
+        boolean supportsNight() { return false; }
+        String getType() { return "MINI"; }
     }
-    static class PartTime extends Employee {
-        PartTime(String n, double s) { super(n, s); }
-        double getBonus() { return salary * 0.05; }
+    static class Sedan extends Cab {
+        Sedan(double k, String t) { super(k, t); }
+        double getRate() { return 14.0; }
+        boolean supportsNight() { return true; }
+        String getType() { return "SEDAN"; }
     }
-    static class Intern extends Employee {
-        Intern(String n, double s) { super(n, s); }
-        double getBonus() { return 2000.0; }
+    static class SUV extends Cab {
+        SUV(double k, String t) { super(k, t); }
+        double getRate() { return 18.0; }
+        boolean supportsNight() { return true; }
+        String getType() { return "SUV"; }
     }
 
     public static void main(String[] args) {
@@ -27,22 +42,26 @@ public class Q4 {
             return;
         }
         int n = scanner.nextInt();
-        Employee[] emps = new Employee[n];
+        Cab[] cabs = new Cab[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
-            String name = scanner.next();
-            double s = scanner.nextDouble();
-            if (type.equals("FULLTIME")) emps[i] = new FullTime(name, s);
-            else if (type.equals("PARTTIME")) emps[i] = new PartTime(name, s);
-            else emps[i] = new Intern(name, s);
+            double k = scanner.nextDouble();
+            String t = scanner.next();
+            if (type.equals("MINI")) cabs[i] = new Mini(k, t);
+            else if (type.equals("SEDAN")) cabs[i] = new Sedan(k, t);
+            else cabs[i] = new SUV(k, t);
         }
         double total = 0;
         for (int i = 0; i < n; i++) {
-            double b = emps[i].getBonus();
-            System.out.printf("%s: %.2f\n", emps[i].name, b);
-            total += b;
+            double fare = cabs[i].getFare();
+            if (fare < 0) {
+                System.out.printf("%s: night service not available\n", cabs[i].getType());
+            } else {
+                System.out.printf("%s: %.2f\n", cabs[i].getType(), fare);
+                total += fare;
+            }
         }
-        System.out.printf("Total Bonus: %.2f\n", total);
+        System.out.printf("Total: %.2f\n", total);
         scanner.close();
     }
 }

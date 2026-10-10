@@ -1,22 +1,28 @@
 import java.util.Scanner;
 
 public class Q2 {
-    static abstract class Item {
-        String title;
-        Item(String title) { this.title = title; }
-        abstract int getDays();
+    static abstract class Staff {
+        String name;
+        Staff(String n) { name = n; }
+        abstract double getPay();
     }
-    static class Book extends Item {
-        Book(String title) { super(title); }
-        int getDays() { return 14; }
+    static class FullTime extends Staff {
+        double salary;
+        FullTime(String n, double s) { super(n); salary = s; }
+        double getPay() { return salary; }
     }
-    static class DVD extends Item {
-        DVD(String title) { super(title); }
-        int getDays() { return 7; }
+    static class Hourly extends Staff {
+        double hours, rate;
+        Hourly(String n, double h, double r) { super(n); hours = h; rate = r; }
+        double getPay() {
+            if (hours <= 40) return hours * rate;
+            return (40 * rate) + ((hours - 40) * 1.5 * rate);
+        }
     }
-    static class Magazine extends Item {
-        Magazine(String title) { super(title); }
-        int getDays() { return 3; }
+    static class Intern extends Staff {
+        double stipend;
+        Intern(String n, double s) { super(n); stipend = s; }
+        double getPay() { return stipend; }
     }
 
     public static void main(String[] args) {
@@ -26,22 +32,21 @@ public class Q2 {
             return;
         }
         int n = scanner.nextInt();
-        scanner.nextLine();
-        Item[] items = new Item[n];
+        Staff[] staffList = new Staff[n];
         for (int i = 0; i < n; i++) {
-            String line = scanner.nextLine().trim();
-            int spaceIdx = line.indexOf(" ");
-            String type = line.substring(0, spaceIdx);
-            String title = line.substring(spaceIdx + 1).replace("\"", "");
-            if (type.equals("BOOK")) items[i] = new Book(title);
-            else if (type.equals("DVD")) items[i] = new DVD(title);
-            else items[i] = new Magazine(title);
+            String type = scanner.next();
+            String name = scanner.next();
+            if (type.equals("FULLTIME")) staffList[i] = new FullTime(name, scanner.nextDouble());
+            else if (type.equals("HOURLY")) staffList[i] = new Hourly(name, scanner.nextDouble(), scanner.nextDouble());
+            else staffList[i] = new Intern(name, scanner.nextDouble());
         }
-        java.time.LocalDate current = java.time.LocalDate.of(2023, 10, 26);
+        double total = 0;
         for (int i = 0; i < n; i++) {
-            java.time.LocalDate due = current.plusDays(items[i].getDays());
-            System.out.println(items[i].title + ": " + due);
+            double p = staffList[i].getPay();
+            System.out.printf("%s: %.2f\n", staffList[i].name, p);
+            total += p;
         }
+        System.out.printf("Total Payroll: %.2f\n", total);
         scanner.close();
     }
 }

@@ -1,27 +1,26 @@
 import java.util.Scanner;
 
 public class Q3 {
-    static abstract class Delivery {
-        double weight, distance;
-        Delivery(double w, double d) { this.weight = w; this.distance = d; }
-        abstract double getFee();
-        abstract String getType();
+    static abstract class Item {
+        String title;
+        int days;
+        Item(String t, int d) { title = t; days = d; }
+        abstract double getFine();
     }
-    static class Standard extends Delivery {
-        Standard(double w, double d) { super(w, d); }
-        double getFee() { return 5.0 + 0.5 * weight + 0.1 * distance; }
-        String getType() { return "STANDARD"; }
+    static class Book extends Item {
+        Book(String t, int d) { super(t, d); }
+        double getFine() { return days * 2.0; }
     }
-    static class Express extends Delivery {
-        Express(double w, double d) { super(w, d); }
-        double getFee() { return 15.0 + 1.0 * weight + 0.2 * distance; }
-        String getType() { return "EXPRESS"; }
+    static class DVD extends Item {
+        DVD(String t, int d) { super(t, d); }
+        double getFine() {
+            double f = days * 5.0;
+            return f > 50.0 ? 50.0 : f;
+        }
     }
-    static class International extends Delivery {
-        double customs;
-        International(double w, double d, double c) { super(w, d); this.customs = c; }
-        double getFee() { return 25.0 + 2.0 * weight + 0.5 * distance + customs; }
-        String getType() { return "INTERNATIONAL"; }
+    static class Magazine extends Item {
+        Magazine(String t, int d) { super(t, d); }
+        double getFine() { return days * 1.0; }
     }
 
     public static void main(String[] args) {
@@ -31,22 +30,22 @@ public class Q3 {
             return;
         }
         int n = scanner.nextInt();
-        Delivery[] deliveries = new Delivery[n];
+        Item[] items = new Item[n];
         for (int i = 0; i < n; i++) {
             String type = scanner.next();
-            double w = scanner.nextDouble();
-            double d = scanner.nextDouble();
-            if (type.equals("STANDARD")) deliveries[i] = new Standard(w, d);
-            else if (type.equals("EXPRESS")) deliveries[i] = new Express(w, d);
-            else deliveries[i] = new International(w, d, scanner.nextDouble());
+            String title = scanner.next();
+            int d = scanner.nextInt();
+            if (type.equals("BOOK")) items[i] = new Book(title, d);
+            else if (type.equals("DVD")) items[i] = new DVD(title, d);
+            else items[i] = new Magazine(title, d);
         }
         double total = 0;
         for (int i = 0; i < n; i++) {
-            double fee = deliveries[i].getFee();
-            System.out.printf("%s: %.2f\n", deliveries[i].getType(), fee);
-            total += fee;
+            double f = items[i].getFine();
+            System.out.printf("%s: %.2f\n", items[i].title, f);
+            total += f;
         }
-        System.out.printf("Total: %.2f\n", total);
+        System.out.printf("Total Fines: %.2f\n", total);
         scanner.close();
     }
 }
